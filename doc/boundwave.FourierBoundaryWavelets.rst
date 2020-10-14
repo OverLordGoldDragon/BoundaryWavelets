@@ -1,7 +1,7 @@
-boundwave.FourierBoundaryWavelets module
+boundwave.fourier_boundary_wavelets module
 ========================================
 
-.. automodule:: boundwave.FourierBoundaryWavelets
+.. automodule:: boundwave.fourier_boundary_wavelets
     :members:
     :undoc-members:
     :show-inheritance:

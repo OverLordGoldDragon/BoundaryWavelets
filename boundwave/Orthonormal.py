@@ -3,7 +3,7 @@
 This module is used for calculations of the orthonormalization matrix for
 the boundary wavelets.
 
-The BoundaryWavelets.py package is licensed under the MIT "Expat" license.
+The boundary_wavelets.py package is licensed under the MIT "Expat" license.
 
 Copyright (c) 2019: Josefine Holm and Steffen L. Nielsen.
 """
@@ -12,13 +12,13 @@ Copyright (c) 2019: Josefine Holm and Steffen L. Nielsen.
 # =============================================================================
 import numpy as np
 from scipy.integrate import simps
-import boundwave.BoundaryWavelets as BW
+import boundwave.boundary_wavelets as BW
 
 
 # =============================================================================
 # Functions
 # =============================================================================
-def Integral(J, k, l, WaveletCoef, phi):
+def integral(J, k, l, wavelet_coef, phi):
     r'''
     This function calculates the integral (16) numerically.
 
@@ -29,7 +29,7 @@ def Integral(J, k, l, WaveletCoef, phi):
             The translation for the first function.
         l : int
             The translation for the second function.
-        WaveletCoef : numpy.float64
+        wavelet_coef : numpy.float64
             The wavelet coefficients, must sum to :math:`\sqrt{2}`.
             For Daubechies 2 they can be found using
             `np.flipud(pywt.Wavelet('db2').dec_lo)`.
@@ -42,17 +42,17 @@ def Integral(J, k, l, WaveletCoef, phi):
 
     '''
 
-    a = int(len(WaveletCoef)/2)
-    OneStep = len(phi)//(2*a-1)
-    phiNorm = np.linalg.norm(BW.DownSample(phi, 0, OneStep, J))
-    phi1 = BW.DownSample(phi, k, OneStep, J)/phiNorm
-    phi2 = BW.DownSample(phi, l, OneStep, J)/phiNorm
-    phiProd = phi1*phi2
+    a = int(len(wavelet_coef) / 2)
+    OneStep = len(phi) // (2 * a - 1)
+    phiNorm = np.linalg.norm(BW.downsample(phi, 0, OneStep, J))
+    phi1 = BW.downsample(phi, k, OneStep, J) / phiNorm
+    phi2 = BW.downsample(phi, l, OneStep, J) / phiNorm
+    phiProd = phi1 * phi2
     Integ = simps(phiProd)
     return Integ
 
 
-def M_AlphaBeta(alpha, beta, J, WaveletCoef, InteMatrix, Side):
+def m_alpha_beta(alpha, beta, J, wavelet_coef, inte_matrix, Side):
     r'''
     This function calculates an entry in the martix :math:`M` (15).
 
@@ -63,13 +63,13 @@ def M_AlphaBeta(alpha, beta, J, WaveletCoef, InteMatrix, Side):
             beta
         J : int
             The scale.
-        WaveletCoef : numpy.float64
+        wavelet_coef : numpy.float64
             The wavelet coefficients, must sum to :math:`\sqrt{2}`. For
             Daubechies 2 they can be found using
             `np.flipud(pywt.Wavelet('db2').dec_lo`).
-        InteMatrix : numpy.float64
+        inte_matrix : numpy.float64
             A matrix with the values for the integrals calculated with
-            the function :py:func:`Integral` for k and l in the
+            the function :py:func:`integral` for k and l in the
             interval [-2*a+2,0] or [2**J-2*a+1,2**J-1].
         Side : str
             `'L'` for left interval boundary and `'R'` for right
@@ -80,29 +80,29 @@ def M_AlphaBeta(alpha, beta, J, WaveletCoef, InteMatrix, Side):
 
     '''
 
-    a = int(len(WaveletCoef)/2)
-    Moment = BW.Moments(WaveletCoef, a-1)
+    a = int(len(wavelet_coef) / 2)
+    Moment = BW.moments(wavelet_coef, a - 1)
     M = 0
     if Side == 'L':
-        Interval = range(-2*a+2, 1)
+        interval = range(-2 * a + 2, 1)
         i = 0
-        for k in Interval:
+        for k in interval:
             j = 0
-            for m in Interval:
-                M += (BW.InnerProductPhiX(alpha, 0, k, Moment) *
-                      BW.InnerProductPhiX(beta, 0, m, Moment) *
-                      InteMatrix[i, j])
+            for m in interval:
+                M += (BW.inner_product_phi_x(alpha, 0, k, Moment) *
+                      BW.inner_product_phi_x(beta, 0, m, Moment) *
+                      inte_matrix[i, j])
                 j += 1
             i += 1
     elif Side == 'R':
-        Interval = range(2**J-2*a+1, 2**J)
+        interval = range(2**J - 2 * a + 1, 2**J)
         i = 0
-        for k in Interval:
+        for k in interval:
             j = 0
-            for m in Interval:
-                M += (BW.InnerProductPhiX(alpha, 0, k, Moment) *
-                      BW.InnerProductPhiX(beta, 0, m, Moment) *
-                      InteMatrix[i, j] * 2**(-J*(alpha+beta)))
+            for m in interval:
+                M += (BW.inner_product_phi_x(alpha, 0, k, Moment) *
+                      BW.inner_product_phi_x(beta, 0, m, Moment) *
+                      inte_matrix[i, j] * 2**(-J * (alpha + beta)))
                 j += 1
             i += 1
     else:
@@ -111,17 +111,17 @@ def M_AlphaBeta(alpha, beta, J, WaveletCoef, InteMatrix, Side):
     return M
 
 
-def OrthoMatrix(J, WaveletCoef, phi):
+def ortho_matrix(J, wavelet_coef, phi):
     r'''
     This function findes the orthogonality matrix :math:`A`. First
-    uses the functions :py:func:`M_AlphaBeta` and :py:func:`Integral`
+    uses the functions :py:func:`m_alpha_beta` and :py:func:`integral`
     to make the matrix M. Then computes a Cholesky decomposition,
     which is then inverted.
 
     INPUT:
         J : int
             The scale.
-        WaveletCoef : numpy.float64
+        wavelet_coef : numpy.float64
             The wavelet coefficients, must sum to
             :math:`\sqrt{2}`. For Daubechies 2 they can be found using
             `np.flipud(pywt.Wavelet('db2').dec_lo)`.
@@ -131,49 +131,49 @@ def OrthoMatrix(J, WaveletCoef, phi):
     OUTPUT:
         AL : numpy.float64
             Left orthonormalisation matrix; to be used in
-            :py:func:`boundwave.BoundaryWavelets.BoundaryWavelets` or
-            :py:func:`boundwave.FourierBoundaryWavelets.FourierBoundaryWavelets`.
+            :py:func:`boundwave.boundary_wavelets.boundary_wavelets` or
+            :py:func:`boundwave.fourier_boundary_wavelets.fourier_boundary_wavelets`.
         AR : numpy.float64
             Right orthonormalisation matrix; to be used in
-            :py:func:`boundwave.BoundaryWavelets.BoundaryWavelets` or
-            :py:func:`boundwave.FourierBoundaryWavelets.FourierBoundaryWavelets`.
+            :py:func:`boundwave.boundary_wavelets.boundary_wavelets` or
+            :py:func:`boundwave.fourier_boundary_wavelets.fourier_boundary_wavelets`.
 
     '''
 
-    a = int(len(WaveletCoef)/2)
+    a = int(len(wavelet_coef) / 2)
     ML = np.zeros((a, a))
     MR = np.zeros((a, a))
-    InteL = np.zeros((2*a-1, 2*a-1))
+    InteL = np.zeros((2 * a - 1, 2 * a - 1))
     k = 0
-    for i in range(-2*a+2, 1):
+    for i in range(-2 * a + 2, 1):
         m = 0
-        for j in range(-2*a+2, i+1):
-            InteL[k, m] = Integral(J, i, j, WaveletCoef, phi)
+        for j in range(-2 * a + 2, i + 1):
+            InteL[k, m] = integral(J, i, j, wavelet_coef, phi)
             InteL[m, k] = InteL[k, m]
             m += 1
         k += 1
-    InteR = np.zeros((2*a-1, 2*a-1))
+    InteR = np.zeros((2 * a - 1, 2 * a - 1))
     k = 0
-    for i in range(2**J-2*a+1, 2**J):
+    for i in range(2**J - 2 * a + 1, 2**J):
         m = 0
-        for j in range(2**J-2*a+1, i+1):
-            InteR[k, m] = Integral(J, i, j, WaveletCoef, phi)
+        for j in range(2**J - 2 * a + 1, i + 1):
+            InteR[k, m] = integral(J, i, j, wavelet_coef, phi)
             InteR[m, k] = InteR[k, m]
             m += 1
         k += 1
     for i in range(a):
-        for j in range(i+1):
-            ML[i, j] = M_AlphaBeta(i, j, J, WaveletCoef, InteL, 'L')
+        for j in range(i + 1):
+            ML[i, j] = m_alpha_beta(i, j, J, wavelet_coef, InteL, 'L')
             ML[j, i] = ML[i, j]
     for i in range(a):
-        for j in range(i+1):
-            MR[i, j] = M_AlphaBeta(i, j, J, WaveletCoef, InteR, 'R')
+        for j in range(i + 1):
+            MR[i, j] = m_alpha_beta(i, j, J, wavelet_coef, InteR, 'R')
             MR[j, i] = MR[i, j]
     h = 2**(J * np.arange(a))
     CL = np.linalg.cholesky(ML)
-    AL = 2**(J/2) * np.dot(np.linalg.inv(CL), np.diag(h))
+    AL = 2**(J / 2) * np.dot(np.linalg.inv(CL), np.diag(h))
     CR = np.linalg.cholesky(MR)
     U, S, V = np.linalg.svd(CR)
-    AR = 2**(J/2)*np.dot(np.dot(np.transpose(V), np.diag(1/S)),
-                         np.transpose(U))
+    AR = 2**(J / 2) * np.dot(np.dot(np.transpose(V), np.diag(1 / S)),
+                             np.transpose(U))
     return AL, AR

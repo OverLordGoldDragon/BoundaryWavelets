@@ -14,13 +14,13 @@
 #
 import os
 import sys
-sys.path.insert(0, '/home/tha/public-repo/BoundaryWavelets')
-sys.path.insert(1, '/home/tha/public-repo/BoundaryWavelets/test')
+sys.path.insert(0, '/home/tha/public-repo/boundary_wavelets')
+sys.path.insert(1, '/home/tha/public-repo/boundary_wavelets/test')
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'BoundaryWavelets'
+project = 'boundary_wavelets'
 copyright = '2019, Josefine Holm, Steffen Lønsmann Nielsen'
 author = 'Josefine Holm, Steffen Lønsmann Nielsen'
 
@@ -133,7 +133,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'boundwave.tex', 'BoundaryWavelets Documentation',
+    (master_doc, 'boundwave.tex', 'boundary_wavelets Documentation',
      author, 'manual'),
 ]
 

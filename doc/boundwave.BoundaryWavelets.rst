@@ -1,7 +1,7 @@
-boundwave.BoundaryWavelets module
+boundwave.boundary_wavelets module
 =================================
 
-.. automodule:: boundwave.BoundaryWavelets
+.. automodule:: boundwave.boundary_wavelets
     :members:
     :undoc-members:
     :show-inheritance:

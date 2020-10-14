@@ -1,4 +1,4 @@
-BoundaryWavelets package
+boundary_wavelets package
 ========================
 
 Submodules
@@ -6,8 +6,8 @@ Submodules
 
 .. toctree::
 
-   boundwave.BoundaryWavelets
-   boundwave.FourierBoundaryWavelets
+   boundwave.boundary_wavelets
+   boundwave.fourier_boundary_wavelets
    boundwave.Orthonormal
 
 .. automodule:: boundwave

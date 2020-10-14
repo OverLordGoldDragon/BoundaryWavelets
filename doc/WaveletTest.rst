@@ -1,7 +1,7 @@
-WaveletTest module
+wavelet_test module
 ==================
 
-.. automodule:: WaveletTest
+.. automodule:: wavelet_test
     :members:
     :undoc-members:
     :show-inheritance:

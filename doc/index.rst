@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to BoundaryWavelets' documentation!
+Welcome to boundary_wavelets' documentation!
 ===========================================
 
 .. toctree::
@@ -19,10 +19,10 @@ Test and example scripts
    :maxdepth: 4
    :caption: Contents:
 
-   DataTest
-   ReconFunctions
-   ReconTest
-   WaveletTest
+   data_test
+   recon_functions
+   recon_test
+   wavelet_test
 
 Indices and tables
 ==================

@@ -1,4 +1,4 @@
-The BoundaryWavelets.py package is licensed under the MIT "Expat" License:
+The BoundaryWavelets package is licensed under the MIT "Expat" License:
 
 > Copyright (c) 2018: Josefine Holm and Steffen L. Nielsen.
 >

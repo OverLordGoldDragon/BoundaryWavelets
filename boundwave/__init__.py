@@ -1,3 +1,3 @@
-from . import BoundaryWavelets
-from . import FourierBoundaryWavelets
-from . import Orthonormal
+from . import boundary_wavelets
+from . import fourier_boundary_wavelets
+from . import orthonormal
